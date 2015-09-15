@@ -16,20 +16,20 @@ use Test::Nightly::Report;
 use base qw(Test::Nightly::Base Class::Accessor::Fast);
 
 my @methods = qw(
-	base_directories
-	email_report
-	build_script
-	build_type
+    base_directories
+    email_report
+    build_script
+    build_type
     modules
-	report_output
-	report_template
+    report_output
+    report_template
     test
-	test_directory_format
-	test_file_format
-	test_report
+    test_directory_format
+    test_file_format
+    test_report
     version_result
-	install_module
-	skip_tests
+    install_module
+    skip_tests
 );
 
 __PACKAGE__->mk_accessors(@methods);
@@ -77,7 +77,7 @@ The idea behind this module is to have one script, most probably a cron job, to 
 
   $nightly->generate_report({
     email_report => {
-  	  to      => 'kirstinbettiol@gmail.com',
+        to      => 'kirstinbettiol@gmail.com',
     },
     report_output => '/report/output/dir/test_report.html',
   });
@@ -104,55 +104,55 @@ The idea behind this module is to have one script, most probably a cron job, to 
     base_directories => \@directories,           # Required. Array of base directories to search in.
     build_script     => 'Build.PL',              # Defaults to 'Makefile.PL'.
     run_tests        => {
-  	  test_directory_format => ['t/', 'tests/'], # Optional, defaults to 't/'.
-  	  test_file_format      => ['.t', '.pl'],    # Optional, defaults to '.t'.
+        test_directory_format => ['t/', 'tests/'], # Optional, defaults to 't/'.
+        test_file_format      => ['.t', '.pl'],    # Optional, defaults to '.t'.
       build_type            => 'make',           # || 'build'. Defaults to 'make'.
       install_module        => 'all',            # || 'passed'. 'all' is default.
       skip_tests            => 1,                # skips the tests.
       test_order            => 'ordered',        # || 'random'. 'ordered' is default.
     },
     generate_report => {
-  	  email_report    => \%email_config,                # Emails the report. See L<Test::Nightly::Email> for config.
-  	  report_template => '/dir/somewhere/template.txt', # Defaults to internal template.
-  	  report_output   => '/dir/somewhere/output.txt',   # File to output the report to.
-  	  test_report     => 'all',                         # 'failed' || 'passed'. Defaults to all.
+        email_report    => \%email_config,                # Emails the report. See L<Test::Nightly::Email> for config.
+        report_template => '/dir/somewhere/template.txt', # Defaults to internal template.
+        report_output   => '/dir/somewhere/output.txt',   # File to output the report to.
+        test_report     => 'all',                         # 'failed' || 'passed'. Defaults to all.
     },
   });
 
 This is the constructor used to create the main object.
 
-Does a search for all modules on your system, matching the build script description (C<build_script>). You can choose to run all your tests and generate your report directly from this module, by supplying C<run_tests> and C<generate_report>. Or you can simply supply C<base_directories> and it call the other methods separately. 
+Does a search for all modules on your system, matching the build script description (C<build_script>). You can choose to run all your tests and generate your report directly from this module, by supplying C<run_tests> and C<generate_report>. Or you can simply supply C<base_directories> and it call the other methods separately.
 
 =cut
 
 sub new {
 
     my ($class, $conf) = @_;
-		
-	my $self = bless {}, $class;
 
-	$self->_init($conf, \@methods);
+    my $self = bless {}, $class;
 
-	if (!defined $self->base_directories()) {
-		croak 'Test::Nightly::new() - "base_directories" must be supplied';
-	} else {
+    $self->_init($conf, \@methods);
 
-		$self->build_script('Makefile.PL') unless defined $self->build_script();
+    if (!defined $self->base_directories()) {
+        croak 'Test::Nightly::new() - "base_directories" must be supplied';
+    } else {
 
-		$self->_find_modules();
+        $self->build_script('Makefile.PL') unless defined $self->build_script();
 
-		# See if any methods should be called from new
-		foreach my $run (@run_these) {
+        $self->_find_modules();
 
-			if(defined $conf->{$run}) {
-				# user wants to run this one
-				$self->$run($conf->{$run});
-			}
-		}
+        # See if any methods should be called from new
+        foreach my $run (@run_these) {
 
-		return $self;
+            if(defined $conf->{$run}) {
+                # user wants to run this one
+                $self->$run($conf->{$run});
+            }
+        }
 
-	}
+        return $self;
+
+    }
 
 }
 
@@ -175,16 +175,16 @@ Results are stored back in the object so they can be reported on.
 
 sub run_tests {
 
-	my ($self, $conf) = @_;
+    my ($self, $conf) = @_;
 
-	$self->_init($conf, \@methods);
+    $self->_init($conf, \@methods);
 
-	my $test = Test::Nightly::Test->new($self);
+    my $test = Test::Nightly::Test->new($self);
 
-	$test->run();
+    $test->run();
 
-	$self->test($test);
-	
+    $self->test($test);
+
 }
 
 =head2 generate_report()
@@ -196,11 +196,11 @@ sub run_tests {
     test_report     => 'all',                         # 'failed' || 'passed'. Defaults to all.
   });
 
-Based on the methods that have been run, produces a report on these. 
+Based on the methods that have been run, produces a report on these.
 
 Depending on what you pass in, defines what report is generated. If you pass in an email address to L<email_report> then the report will be
-emailed. If you specify an output file to C<report_output> then the report will be outputted to that file. 
-If you specify both, then both will be done. 
+emailed. If you specify an output file to C<report_output> then the report will be outputted to that file.
+If you specify both, then both will be done.
 
 Default behavior is to use the internal template that is in L<Test::Nightly::Report::Template>, however you can overwrite this with your own template (C<report_template>). Uses Template Toolkit logic.
 
@@ -210,11 +210,11 @@ sub generate_report {
 
     my ($self, $conf) = @_;
 
-	$self->_init($conf, \@methods);
+    $self->_init($conf, \@methods);
 
-	my $report = Test::Nightly::Report->new($self);	
+    my $report = Test::Nightly::Report->new($self);
 
-	$report->run();
+    $report->run();
 
 }
 
@@ -226,36 +226,36 @@ sub _find_modules {
         croak 'Test::Nightly::_find_modules(): Supplied "build_script" can not contain a space';
     }
 
-	my @modules;
+    my @modules;
 
-	# Search through all the base directories supplied.
-	foreach my $dir (@{$self->base_directories()}) {
+    # Search through all the base directories supplied.
+    foreach my $dir (@{$self->base_directories()}) {
 
-		# Continue if that directory exists
-		if (-d $dir) {
-			
-			# Search for files matching the build script description.
-			my @found_build_scripts = File::Find::Rule->file()->name( $self->build_script() )->in($dir);
+        # Continue if that directory exists
+        if (-d $dir) {
 
-			# do i need to do this?
-			foreach my $found_build_script (@found_build_scripts) {
+            # Search for files matching the build script description.
+            my @found_build_scripts = File::Find::Rule->file()->name( $self->build_script() )->in($dir);
 
-				my ($volume, $directory, $build_script) = File::Spec->splitpath( $found_build_script );
-				
-				my %module;
-				$module{'directory'} = $directory;
-				$module{'build_script'} = $build_script;
-				
-				push(@modules, \%module);
+            # do i need to do this?
+            foreach my $found_build_script (@found_build_scripts) {
 
-			}
+                my ($volume, $directory, $build_script) = File::Spec->splitpath( $found_build_script );
 
-		} else {
-			carp 'Test::Nightly::_find_modules() - directory: "'.$dir.'" is not a valid directory';
-			next;
-		}
+                my %module;
+                $module{'directory'} = $directory;
+                $module{'build_script'} = $build_script;
 
-	}
+                push(@modules, \%module);
+
+            }
+
+        } else {
+            carp 'Test::Nightly::_find_modules() - directory: "'.$dir.'" is not a valid directory';
+            next;
+        }
+
+    }
 
     $self->modules(\@modules);
 
@@ -346,10 +346,10 @@ Kirstin Bettiol <kirstinbettiol@gmail.com>
 
 =head1 SEE ALSO
 
-L<Test::Nightly>, 
-L<Test::Nightly::Test>, 
-L<Test::Nightly::Report>, 
-L<Test::Nightly::Email>, 
+L<Test::Nightly>,
+L<Test::Nightly::Test>,
+L<Test::Nightly::Report>,
+L<Test::Nightly::Email>,
 L<perl>.
 
 =head1 COPYRIGHT

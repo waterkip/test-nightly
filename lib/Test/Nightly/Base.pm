@@ -10,8 +10,8 @@ use Test::Nightly::Email;
 use base 'Class::Accessor::Fast';
 
 my @methods = qw(
-	debug
-	report_template
+    debug
+    report_template
 );
 
 __PACKAGE__->mk_accessors(@methods);
@@ -41,8 +41,8 @@ sub _init {
     $self->{_is_win32} = ( $^O =~ /^(MS)?Win32$/ );
     $self->{_is_macos} = ( $^O eq 'MacOS' );
 
-	my @all_methods = @{$methods};
-	push (@all_methods, @methods);
+    my @all_methods = @{$methods};
+    push (@all_methods, @methods);
 
     my $is_obj = 1 if ref($conf) =~ /Test::Night/;
     foreach my $method (@all_methods) {
@@ -101,10 +101,10 @@ This library is free software, you can use it under the same terms as perl itsel
 
 =head1 SEE ALSO
 
-L<Test::Nightly>, 
-L<Test::Nightly::Test>, 
-L<Test::Nightly::Report>, 
-L<Test::Nightly::Email>, 
+L<Test::Nightly>,
+L<Test::Nightly::Test>,
+L<Test::Nightly::Report>,
+L<Test::Nightly::Email>,
 L<perl>.
 
 =cut

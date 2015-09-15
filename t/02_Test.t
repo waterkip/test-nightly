@@ -19,16 +19,16 @@ my @methods = qw(new run);
 can_ok('Test::Nightly::Test', @methods);
 
 my @modules = (
-	{
-		directory 		=> 't/data/module/' ,
-		build_script	=> 'Makefile.PL',
-	},
+    {
+        directory         => 't/data/module/' ,
+        build_script    => 'Makefile.PL',
+    },
 );
 
 my $test_obj1 = Test::Nightly::Test->new({
-	modules					=> \@modules,
-	test_directory_format 	=> ['fake_test_folder/'],
-    test_file_format      	=> ['.pl'],   
+    modules                    => \@modules,
+    test_directory_format     => ['fake_test_folder/'],
+    test_file_format          => ['.pl'],
 });
 
 #==================================================
@@ -38,34 +38,34 @@ my $test_obj1 = Test::Nightly::Test->new({
 ok($test_obj1->test_directory_format()->[0] eq 'fake_test_folder/', 'new() - The correct folder format was retrieved');
 
 #==================================================
-# Check that the correct test file format was 
+# Check that the correct test file format was
 # retrieved
 #==================================================
 
 ok($test_obj1->test_file_format()->[0] eq '.pl', 'new() - The correct file format was retrieved');
 
 my $test_obj2 = Test::Nightly::Test->new({
-	modules	=> \@modules,
+    modules    => \@modules,
 });
 
 $test_obj2->run();
 
 my %test_output_structure = (
 
-	't/data/module/t' => [
-		{
-		'test' => 't/001_test_that_passes.t',
-		'status' => 'passed'
-		},
-		{
-		'test' => 't/002_test_that_fails.t',
-		'status' => 'failed'
-		},
-		{
-		'test' => 't/003_test_that_passes.t',
-		'status' => 'passed'
-		}
-	]
+    't/data/module/t' => [
+        {
+        'test' => 't/001_test_that_passes.t',
+        'status' => 'passed'
+        },
+        {
+        'test' => 't/002_test_that_fails.t',
+        'status' => 'failed'
+        },
+        {
+        'test' => 't/003_test_that_passes.t',
+        'status' => 'passed'
+        }
+    ]
 
 );
 

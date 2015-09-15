@@ -11,16 +11,16 @@ use Email::Simple::Creator;
 use base qw(Test::Nightly::Base Class::Accessor::Fast);
 
 my @methods = qw(
-	smtp_server
-	to           
-	cc           
-	bcc          
-	from         
-	subject      
-	content_type 
-	mailer       
-	message      
-	smtp_server
+    smtp_server
+    to
+    cc
+    bcc
+    from
+    subject
+    content_type
+    mailer
+    message
+    smtp_server
 );
 
 __PACKAGE__->mk_accessors(@methods);
@@ -56,13 +56,13 @@ Package that uses the Email::* modules to mail reports and error notifications. 
     bcc          => 'kirstinbettiol@gmail.com',
     from         => 'kirstinbettiol@gmail.com',
     subject      => 'The results of your test',
-    content_type => 'text/html',                 # Defaults 'text/html' 
+    content_type => 'text/html',                 # Defaults 'text/html'
     mailer       => 'Sendmail',                  # 'SMTP' || 'Qmail'. Defaults to 'Sendmail'
     message      => 'The body of the email',
     smtp_server  => 'smtp.yourserver.com',       # Required if you specify SMTP as your mailer.
   });
 
-The constructor to create the new email object. 
+The constructor to create the new email object.
 
 =cut
 
@@ -70,11 +70,11 @@ sub new {
 
     my ($class, $conf) = @_;
 
-	my $self = bless {}, $class;
+    my $self = bless {}, $class;
 
-	$self->_init($conf, \@methods);
+    $self->_init($conf, \@methods);
 
-	return $self;
+    return $self;
 
 }
 
@@ -92,46 +92,46 @@ sub email {
 
     my ($self, $conf) = @_;
 
-	$self->_init($conf, \@methods);
-	
-	$self->content_type('text/html') 	unless defined $self->content_type();
-	$self->mailer('Sendmail')		 	unless defined $self->mailer();
+    $self->_init($conf, \@methods);
 
-	unless (defined $self->to()) {
-		return;
-	}
+    $self->content_type('text/html')     unless defined $self->content_type();
+    $self->mailer('Sendmail')             unless defined $self->mailer();
 
-	my %header = (
-		'To'           => $self->to(),
-		'Cc'           => $self->cc(),
-		'Bcc'          => $self->bcc(),
-		'From'         => $self->from(),
-		'Subject'      => $self->subject(),
-		'Content-Type' => $self->content_type(),
-	);
+    unless (defined $self->to()) {
+        return;
+    }
 
-	my $email = Email::Simple->create(
-		header => [%header],
-		body   => $self->message(),
-	);
+    my %header = (
+        'To'           => $self->to(),
+        'Cc'           => $self->cc(),
+        'Bcc'          => $self->bcc(),
+        'From'         => $self->from(),
+        'Subject'      => $self->subject(),
+        'Content-Type' => $self->content_type(),
+    );
 
-	if ($self->mailer() =~ /Sendmail/i) {
+    my $email = Email::Simple->create(
+        header => [%header],
+        body   => $self->message(),
+    );
 
-		send Sendmail => $email;
+    if ($self->mailer() =~ /Sendmail/i) {
 
-	} elsif ($self->mailer() =~ /SMTP/i) {
+        send Sendmail => $email;
 
-		if (defined $self->smtp_server()) {
+    } elsif ($self->mailer() =~ /SMTP/i) {
 
-			send SMTP => $email, $self->smtp_server();
+        if (defined $self->smtp_server()) {
 
-		} 
+            send SMTP => $email, $self->smtp_server();
 
-	} elsif ($self->mailer() =~ /Qmail/i) {
+        }
 
-		send Qmail => $email;
+    } elsif ($self->mailer() =~ /Qmail/i) {
 
-	}
+        send Qmail => $email;
+
+    }
 
 }
 
@@ -160,7 +160,7 @@ The email "from" field.
 The subject line of the email
 
 =item content_type
-  
+
 The Content-type you wish the email to be. Defaults to 'text/html'.
 
 =item mailer
@@ -188,16 +188,16 @@ This library is free software, you can use it under the same terms as perl itsel
 
 =head1 SEE ALSO
 
-L<Email::Send>, 
-L<Email::Simple>, 
-L<Email::Simple::Creator>, 
-L<Email::Send::Qmail>, 
-L<Email::Send::SMTP>, 
-L<Email::Send::Sendmail>, 
-L<Test::Nightly>, 
-L<Test::Nightly::Test>, 
-L<Test::Nightly::Report>, 
-L<Test::Nightly::Email>, 
+L<Email::Send>,
+L<Email::Simple>,
+L<Email::Simple::Creator>,
+L<Email::Send::Qmail>,
+L<Email::Send::SMTP>,
+L<Email::Send::Sendmail>,
+L<Test::Nightly>,
+L<Test::Nightly::Test>,
+L<Test::Nightly::Report>,
+L<Test::Nightly::Email>,
 L<perl>.
 
 =cut

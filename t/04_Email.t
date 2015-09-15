@@ -23,7 +23,7 @@ my $test_obj1 = Test::Nightly::Email->new();
 my $subject = 'This is a test subject';
 
 $test_obj1->email({
-	subject	=> $subject
+    subject    => $subject
 });
 
 #==================================================

@@ -12,14 +12,14 @@ use Test::Nightly::Report::Template;
 use base qw(Test::Nightly::Base Class::Accessor::Fast);
 
 my @methods = qw(
-	email_report
-	report_template
-	report_output
-	test
-	tests
-	test_report
-	version_report
-	version_result
+    email_report
+    report_template
+    report_output
+    test
+    tests
+    test_report
+    version_report
+    version_result
 );
 
 __PACKAGE__->mk_accessors(@methods);
@@ -37,10 +37,10 @@ Generates a report based on the tests that have been run, that can then be email
 =head1 SYNOPSIS
 
   use Test::Nightly::Report;
-  
+
   my $nightly = Test::Nightly::Report->new({
     email_report => {
-  	to => 'kirstinbettiol@gmail.com',
+      to => 'kirstinbettiol@gmail.com',
     }
   });
 
@@ -59,10 +59,10 @@ The following methods are available:
     test_report     => 'all',                         # 'failed' || 'passed'. Defaults to all.
   });
 
-Produces a report on the tests that have been run.  
+Produces a report on the tests that have been run.
 
-Depending on what you pass in, defines what report is generated. 
-If you would like the report emailed to you, pass in C<email_report>. 
+Depending on what you pass in, defines what report is generated.
+If you would like the report emailed to you, pass in C<email_report>.
 If you would like the report to be logged somewhere, then pass in C<report_template>.
 
 Default template can be seen in L<Test::Nightly::Report::Template>
@@ -73,11 +73,11 @@ sub new {
 
     my ($class, $conf) = @_;
 
-	my $self = bless {}, $class;
+    my $self = bless {}, $class;
 
-	$self->_init($conf, \@methods);
+    $self->_init($conf, \@methods);
 
-	return $self;
+    return $self;
 
 }
 
@@ -95,83 +95,83 @@ sub run {
 
     my ($self, $conf) = @_;
 
-	$self->test_report('all') unless $self->test_report();
-	$self->_debug('Running Report');
+    $self->test_report('all') unless $self->test_report();
+    $self->_debug('Running Report');
 
-	# Return if there are no tests
-	return if ( !$self->tests() );
-	# Return if there are no passed tests and we are only reporting on passed tests
-	return if ( !$self->_passed_tests() && $self->test_report() eq 'passed' );
-	# Return if there are no failed tests and we are only reporting on failed tests
-	return if ( !$self->_failed_tests() && $self->test_report() eq 'failed' );
+    # Return if there are no tests
+    return if ( !$self->tests() );
+    # Return if there are no passed tests and we are only reporting on passed tests
+    return if ( !$self->_passed_tests() && $self->test_report() eq 'passed' );
+    # Return if there are no failed tests and we are only reporting on failed tests
+    return if ( !$self->_failed_tests() && $self->test_report() eq 'failed' );
 
-	# Work out what test data we want.
-	my %vals;
+    # Work out what test data we want.
+    my %vals;
 
-	if ($self->test_report() eq 'failed') {
-		$vals{'tests'} = $self->_failed_tests();
-	} elsif ($self->test_report() eq 'passed') {
-		$vals{'tests'} = $self->_passed_tests();
-	} else {
-		$vals{'tests'} = $self->tests();
-	}
+    if ($self->test_report() eq 'failed') {
+        $vals{'tests'} = $self->_failed_tests();
+    } elsif ($self->test_report() eq 'passed') {
+        $vals{'tests'} = $self->_passed_tests();
+    } else {
+        $vals{'tests'} = $self->tests();
+    }
 
-	# Read in the passed in template, else use the default template
-	my $template;
-	if (defined $self->report_template()) {
+    # Read in the passed in template, else use the default template
+    my $template;
+    if (defined $self->report_template()) {
 
-		open DATA, $self->report_template() or $self->_add_error('Test::Nightly::Report::run() - Error with "report_template": ' . $self->report_output() . ': ' . $!);
-		while(<DATA>) {
-			$template .= $_ . "\r\n";
-		}
+        open DATA, $self->report_template() or $self->_add_error('Test::Nightly::Report::run() - Error with "report_template": ' . $self->report_output() . ': ' . $!);
+        while(<DATA>) {
+            $template .= $_ . "\r\n";
+        }
 
-	} else {
-		$template = Test::Nightly::Report::Template::DEFAULT;
-	}
+    } else {
+        $template = Test::Nightly::Report::Template::DEFAULT;
+    }
 
-	if ($template) {
-	
-		my $tt = Template->new({ABSOLUTE => 1});
+    if ($template) {
 
-		# Process the Report
-		my $report = '';
-		$tt->process(\$template, \%vals, \$report);
-		carp $tt->error() if ($tt->error());
+        my $tt = Template->new({ABSOLUTE => 1});
 
-		# Send an email if an email address is passed in
-		if (defined $self->email_report()) {
+        # Process the Report
+        my $report = '';
+        $tt->process(\$template, \%vals, \$report);
+        carp $tt->error() if ($tt->error());
 
-			my $email = Test::Nightly::Email->new($self->email_report());
+        # Send an email if an email address is passed in
+        if (defined $self->email_report()) {
 
-			$email->email({
-				subject	=> 'Results of your Tests',
-				message => $report,
-			});
+            my $email = Test::Nightly::Email->new($self->email_report());
 
-		}	
-		if (defined $self->report_output()) {
+            $email->email({
+                subject    => 'Results of your Tests',
+                message => $report,
+            });
 
-			open(FH,">" . $self->report_output()) || $self->_add_error('Test::Nightly::Report::run() - Error with "report_output": ' . $self->report_output() . ': ' . $!);
-			print FH $report;
-			close(FH);
+        }
+        if (defined $self->report_output()) {
 
-		}  
+            open(FH,">" . $self->report_output()) || $self->_add_error('Test::Nightly::Report::run() - Error with "report_output": ' . $self->report_output() . ': ' . $!);
+            print FH $report;
+            close(FH);
 
-	}
+        }
+
+    }
 
 }
 
-# Gets the tests from the the test output 
+# Gets the tests from the the test output
 
 sub tests {
 
     my $self = shift;
 
-	if (defined $self->test()) {
-    	return $self->test()->tests();
-	} else {
-		return;
-	}
+    if (defined $self->test()) {
+        return $self->test()->tests();
+    } else {
+        return;
+    }
 
 }
 
@@ -179,9 +179,9 @@ sub tests {
 
 sub _passed_tests {
 
-	my $self = shift;
+    my $self = shift;
 
-	return $self->test()->passed_tests();
+    return $self->test()->passed_tests();
 
 }
 
@@ -189,9 +189,9 @@ sub _passed_tests {
 
 sub _failed_tests {
 
-	my $self = shift;
+    my $self = shift;
 
-	return $self->test()->failed_tests();
+    return $self->test()->failed_tests();
 
 }
 
@@ -232,9 +232,9 @@ This library is free software, you can use it under the same terms as perl itsel
 
 L<Test::Nightly>,
 L<Test::Nightly::Test>,
-L<Test::Nightly::Report>, 
-L<Test::Nightly::Email>, 
-L<Test::Nightly::Report::Template>, 
+L<Test::Nightly::Report>,
+L<Test::Nightly::Email>,
+L<Test::Nightly::Report::Template>,
 L<perl>.
 
 =cut
