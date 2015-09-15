@@ -1,0 +1,8 @@
+Build.PL
+lib/Test/Nightly/Test/Module.pm
+MANIFEST			This list of files
+t/001_test_that_passes.b
+t/001_test_that_passes.t
+t/002_test_that_fails.b
+t/002_test_that_fails.t
+t/003_test_that_passes.t

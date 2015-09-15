@@ -190,7 +190,7 @@ sub run {
                                 my @output = split("\n", $output);
 
                                 # Get Test::Harness::Straps to analyze the output of the test
-                                my %results = $strap->analyze('test', \@output);
+                                my %results = %{$strap->analyze('test', \@output)};
 
                                 # Put test into hash for our data structure
                                 my %single_test = (

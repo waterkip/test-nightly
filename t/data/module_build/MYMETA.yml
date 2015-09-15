@@ -1,0 +1,18 @@
+---
+abstract: 'Testing the tester'
+author:
+  - unknown
+build_requires: {}
+dynamic_config: 0
+generated_by: 'Module::Build version 0.4003, CPAN::Meta::Converter version 2.133380'
+license: perl
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: '1.4'
+name: Test-Nightly-Test-Module
+provides:
+  Test::Nightly::TestModule:
+    file: lib/Test/Nightly/Test/Module.pm
+resources:
+  license: http://dev.perl.org/licenses/
+version: '0'
